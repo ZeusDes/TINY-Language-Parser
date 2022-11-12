@@ -17,7 +17,7 @@ public class Scanner {
         special_chars.put("*", "MULT");
         special_chars.put("/", "DIV");
         special_chars.put("(", "OPENBRACKET");
-        special_chars.put(")", "OPENBRACKET");
+        special_chars.put(")", "CLOSEDBRACKET");
     }};
     private final static HashMap<String, String> Reserved_keyword = new HashMap<>() {{
         Reserved_keyword.put("if", "IF");
@@ -28,7 +28,7 @@ public class Scanner {
         Reserved_keyword.put("read", "READ");
         Reserved_keyword.put("write", "WRITE");
     }};
-    public enum STATE {
+    private enum STATE {
         START,  // Starting state
         IN_ID,  // Indicates reading an identifier
         IN_NUM, // Indicates reading a numeric character
