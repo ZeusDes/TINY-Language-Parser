@@ -5,19 +5,18 @@ import lombok.Data;
 @Data
 public class TokenRecord {
     private String TokenType;
-    private StringBuilder TokenValue;
-    private int TokenNumVal;
+    private String TokenValue;
 
-    public TokenRecord(String tokenType, StringBuilder tokenValue) {
+    public TokenRecord(String tokenValue, String tokenType) {
         this.TokenType = tokenType;
         this.TokenValue = tokenValue;
     }
 
     @Override
     public String toString() {
-        return "(" +
-                TokenType + '\'' +
-                ", " + TokenValue + '\'' +
-                '(';
+        return "(\"" +
+                TokenValue +
+                "\", " + TokenType +
+                ')';
     }
 }
