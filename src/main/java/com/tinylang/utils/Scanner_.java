@@ -1,12 +1,11 @@
 package com.tinylang.utils;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Map.entry;
 
-public class Scanner {
+public class Scanner_ {
     private java.util.Scanner in;
     private STATE currState;
     char currChar = ' ';
@@ -43,13 +42,19 @@ public class Scanner {
         EOF
     }
 
-    public Scanner(String file_path){
+    public Scanner_(String file_path){
         try{
             in = new java.util.Scanner(new File(file_path));
             currState = STATE.START;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean hasNextChar(){
+        if(in.hasNext())
+            return true;
+        return false;
     }
 
     TokenRecord getToken() throws IOException {
@@ -77,7 +82,7 @@ public class Scanner {
                 currState = STATE.START;
             } else if (currState == STATE.IN_COMMENT || ((currChar == ' ' || currChar == '\n') && TokenVal.length() == 0)){
                 /* DO NOTHING - SKIP */
-            } else if ((currChar == ' ' || currChar == '\n' ) && !TokenVal.equals("")) {
+            } else if ((currChar == ' ' || currChar == '\r'  || currChar == '\n') && !TokenVal.equals("")) {
                 currState = STATE.DONE;
             } else if (currChar == ':') {
                 TokenVal.append(currChar);
@@ -109,6 +114,8 @@ public class Scanner {
         }
 
         String TokenType;
+        if(TokenVal.length() == 0)
+            return null;
         if(TokenVal.length() > 0 && Reserved_keyword.containsKey(TokenVal.toString()))
             TokenType = Reserved_keyword.get(TokenVal.toString());
         else if(TokenVal.length() > 0 && Character.isDigit(TokenVal.charAt(0))){
