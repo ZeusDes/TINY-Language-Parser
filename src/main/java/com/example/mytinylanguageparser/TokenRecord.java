@@ -1,4 +1,4 @@
-package com.tinylang.utils;
+package com.example.mytinylanguageparser;
 
 import lombok.Data;
 
