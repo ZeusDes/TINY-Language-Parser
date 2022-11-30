@@ -9,5 +9,6 @@
       fx:controller="com.example.mytinylanguageparser.GUIController">
 
     <Button text="Choose File!" onAction="#loadFile"/>
-    <Button text="Compile!" onAction="#compile"/>
+    <Button fx:id="compile" text="Compile!" onAction="#compile" disable="true"/>
+    <Label fx:id="status" text="Waiting to open file"/>
 </VBox>
