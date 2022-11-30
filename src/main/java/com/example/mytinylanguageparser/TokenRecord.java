@@ -11,6 +11,9 @@ public class TokenRecord {
         this.TokenType = tokenType;
         this.TokenValue = tokenValue;
     }
+    public String getTokenValue(){
+        return TokenValue;
+    }
 
     @Override
     public String toString() {
