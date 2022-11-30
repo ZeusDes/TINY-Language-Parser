@@ -25,8 +25,11 @@ public class GUIController {
         fileChooser.setTitle("Save Output");
         outputFile = fileChooser.showSaveDialog(new Stage());
         try{
-            ScannerDriver.scan(inputFile, outputFile);
-            status.setText("Compiled!");
+            boolean flag = ScannerDriver.scan(inputFile, outputFile);
+            if(flag)
+                status.setText("Compiled!");
+            else
+                status.setText("Code has Error!");
         } catch (IOException e) {
             e.printStackTrace();
         }

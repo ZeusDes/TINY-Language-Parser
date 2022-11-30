@@ -58,7 +58,7 @@ public class Scanner {
     }
 
     TokenRecord getToken() throws IOException {
-        if(currState == STATE.EOF || currState == STATE.ERROR) {
+        if(currState == STATE.EOF) {
             return null;
         }
         StringBuilder TokenVal = new StringBuilder("");
@@ -80,7 +80,7 @@ public class Scanner {
                 currState = STATE.IN_COMMENT;
             } else if (currChar == '}' && currState == STATE.IN_COMMENT) {
                 currState = STATE.START;
-            } else if (currState == STATE.IN_COMMENT || ((currChar == ' ' || currChar == '\n') && TokenVal.length() == 0)){
+            } else if (currState == STATE.IN_COMMENT || ((currChar == ' ' || currChar == '\n' || currChar == '\r') && TokenVal.length() == 0)){
                 /* DO NOTHING - SKIP */
             } else if ((currChar == ' ' || currChar == '\r'  || currChar == '\n') && !TokenVal.equals("")) {
                 currState = STATE.DONE;
@@ -109,7 +109,11 @@ public class Scanner {
 
         if(!in.hasNext()) {
             currState = STATE.EOF;
-        } else if (currState != STATE.ERROR) {
+        }
+        else if(currState == STATE.ERROR) {
+            currState = STATE.START;
+            return new TokenRecord("-1", "-1");
+        }else if (currState != STATE.ERROR) {
             currState = STATE.START;
         }
 
