@@ -1,15 +1,15 @@
-package com.tinylang.utils;
+package com.example.mytinylanguageparser;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Scanner;
 
 public class ScannerDriver {
-    public static void main(String[] args) throws IOException {
-        Scanner sc = new Scanner(System.in);
-        Scanner_ myScanner = new Scanner_(sc.nextLine());
+    public static void scan(File inputFile, File outputFile) throws IOException {
+        java.util.Scanner sc = new java.util.Scanner(System.in);
+        Scanner myScanner = new Scanner(inputFile.getAbsolutePath());
         TokenRecord myTkn = myScanner.getToken();
-        FileWriter myWriter = new FileWriter(sc.nextLine());
+        FileWriter myWriter = new FileWriter(outputFile);
         while (myScanner.hasNextChar()) {
             try {
                 if(myTkn != null) {
@@ -22,7 +22,5 @@ public class ScannerDriver {
             }
         }
         myWriter.close();
-        System.out.println("Press 'Enter' key to exit.");
-       sc.nextLine();
     }
 }

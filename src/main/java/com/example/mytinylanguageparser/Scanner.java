@@ -1,35 +1,35 @@
-package com.tinylang.utils;
+package com.example.mytinylanguageparser;
 
 import java.io.*;
 import java.util.Map;
 
 import static java.util.Map.entry;
 
-public class Scanner_ {
+public class Scanner {
     private java.util.Scanner in;
     private STATE currState;
     char currChar = ' ';
     boolean isDelimiter = false;
     private final static Map<String, String> special_chars = Map.ofEntries(
-    entry(";", "SEMICOLON"),
-    entry(":=", "ASSIGN"),
-    entry("<", "LESSTHAN"),
-    entry("=", "EQUAL"),
-    entry("+", "PLUS"),
-    entry("-", "MINUS"),
-    entry("*", "MULT"),
-    entry("/", "DIV"),
-    entry("(", "OPENBRACKET"),
-    entry(")", "CLOSEDBRACKET")
+            entry(";", "SEMICOLON"),
+            entry(":=", "ASSIGN"),
+            entry("<", "LESSTHAN"),
+            entry("=", "EQUAL"),
+            entry("+", "PLUS"),
+            entry("-", "MINUS"),
+            entry("*", "MULT"),
+            entry("/", "DIV"),
+            entry("(", "OPENBRACKET"),
+            entry(")", "CLOSEDBRACKET")
     );
     private final static Map<String, String> Reserved_keyword = Map.ofEntries(
-        entry("if", "IF"),
-        entry("then", "THEN"),
-        entry("end", "END"),
-        entry("repeat", "REPEAT"),
-        entry("until", "UNTIL"),
-        entry("read", "READ"),
-        entry("write", "WRITE")
+            entry("if", "IF"),
+            entry("then", "THEN"),
+            entry("end", "END"),
+            entry("repeat", "REPEAT"),
+            entry("until", "UNTIL"),
+            entry("read", "READ"),
+            entry("write", "WRITE")
     );
     private enum STATE {
         START,
@@ -42,7 +42,7 @@ public class Scanner_ {
         EOF
     }
 
-    public Scanner_(String file_path){
+    public Scanner(String file_path){
         try{
             in = new java.util.Scanner(new File(file_path));
             currState = STATE.START;
