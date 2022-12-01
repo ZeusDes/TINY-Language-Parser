@@ -5,7 +5,7 @@ plugins {
     id 'org.beryx.jlink' version '2.24.1'
 }
 
-group 'com.example'
+group 'com.tinylang'
 version '1.0-SNAPSHOT'
 
 repositories {
@@ -24,8 +24,8 @@ tasks.withType(JavaCompile) {
 }
 
 application {
-    mainModule = 'com.example.mytinylanguageparser'
-    mainClass = 'com.example.mytinylanguageparser.Main'
+    mainModule = 'com.tinylang'
+    mainClass = 'com.tinylang.Main'
 }
 
 javafx {
@@ -57,7 +57,7 @@ jlinkZip {
     group = 'distribution'
 }
 
-mainClassName = 'com.example.mytinylanguageparser.Main'
+mainClassName = 'com.tinylang.Main'
 
 task fatJar(type: Jar) {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE

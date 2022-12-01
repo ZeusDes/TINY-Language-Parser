@@ -1,4 +1,4 @@
-package com.example.mytinylanguageparser;
+package com.tinylang.utils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -12,10 +12,8 @@ public class ScannerDriver {
         FileWriter myWriter = new FileWriter(outputFile);
         while (myScanner.hasNextChar()) {
             try {
-
                 if(myTkn != null) {
                     myWriter.write(myTkn.toString() + '\n');
-                    //System.out.println(myTkn.toString());
                 }
                 myTkn = myScanner.getToken();
                 if(myTkn.getTokenValue().equals("-1")){

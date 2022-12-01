@@ -1,4 +1,4 @@
-package com.example.mytinylanguageparser;
+package com.tinylang.utils;
 
 import java.io.*;
 import java.util.Map;
@@ -52,58 +52,64 @@ public class Scanner {
     }
 
     public boolean hasNextChar(){
-        if(in.hasNext())
-            return true;
-        return false;
+        return in.hasNext();
     }
 
     TokenRecord getToken() throws IOException {
         if(currState == STATE.EOF) {
             return null;
         }
-        StringBuilder TokenVal = new StringBuilder("");
-        while(in.hasNext() && currState != STATE.DONE) {
-            if(!isDelimiter) {
+        StringBuilder TokenVal = new StringBuilder();
+        while(in.hasNext() && currState != STATE.DONE && currState != STATE.ERROR) {
+            if (!isDelimiter) {
                 in.useDelimiter("");
                 currChar = in.next().charAt(0);
             }
             isDelimiter = false;
-            if (currState != STATE.IN_ASSIGN && currState != STATE.IN_COMMENT && special_chars.containsKey(Character.toString(currChar)) && TokenVal.length() == 0) {
-                currState = STATE.START;
-                return new TokenRecord(Character.toString(currChar), special_chars.get(Character.toString(currChar)));
-            } else if (currState != STATE.IN_ASSIGN && currState != STATE.IN_COMMENT && special_chars.containsKey(Character.toString(currChar))){
+
+            if (currState == STATE.START) {
+                if(special_chars.containsKey(Character.toString(currChar))){
+                    return new TokenRecord(Character.toString(currChar), special_chars.get(Character.toString(currChar)));
+                }
+                if (Character.isDigit(currChar)) {
+                    TokenVal.append(currChar);
+                    currState = STATE.IN_NUM;
+                } else if (Character.isAlphabetic(currChar)) {
+                    TokenVal.append(currChar);
+                    currState = STATE.IN_ALPHA;
+                } else if (currChar == ':') {
+                    TokenVal.append(currChar);
+                    currState = STATE.IN_ASSIGN;
+                } else if(currChar == '{') {
+                    currState = STATE.IN_COMMENT;
+                }
+            } else if(currState == STATE.IN_COMMENT) {
+                if(currChar == '}'){
+                    currState = STATE.START;
+                }
+            } else if (currChar == ' ' || currChar == '\n' || currChar == '\r'){
+                currState = STATE.DONE;
+            } else if(currState != STATE.IN_ASSIGN && special_chars.containsKey(Character.toString(currChar))){
                 isDelimiter = true;
                 currState = STATE.DONE;
-            }
-            // ---------------------------------------------------------------
-            else if (currChar == '{'){
-                currState = STATE.IN_COMMENT;
-            } else if (currChar == '}' && currState == STATE.IN_COMMENT) {
-                currState = STATE.START;
-            } else if (currState == STATE.IN_COMMENT || ((currChar == ' ' || currChar == '\n' || currChar == '\r') && TokenVal.length() == 0)){
-                /* DO NOTHING - SKIP */
-            } else if ((currChar == ' ' || currChar == '\r'  || currChar == '\n') && !TokenVal.equals("")) {
-                currState = STATE.DONE;
-            } else if (currChar == ':') {
+            } else if (currState == STATE.IN_ALPHA) {
                 TokenVal.append(currChar);
-                currState = STATE.IN_ASSIGN;
-            } else if (currChar != '=' && currState == STATE.IN_ASSIGN) {
-                currState = STATE.ERROR;
-                break;
-            } else if(currChar == '=' && currState == STATE.IN_ASSIGN) {
-                currState = STATE.START;
-                TokenVal.append(currChar);
-                return new TokenRecord(TokenVal.toString(), "ASSIGN");
-            } else if(Character.isAlphabetic(currChar) && currState != STATE.IN_NUM) {
-                TokenVal.append(currChar);
-                currState = STATE.IN_ALPHA;
-            } else if(Character.isDigit(currChar)) {
-                TokenVal.append(currChar);
-                if(currState != STATE.IN_ALPHA) currState = STATE.IN_NUM;
+            } else if (currState == STATE.IN_NUM) {
+                if(Character.isDigit(currChar)){
+                    TokenVal.append(currChar);
+                } else {
+                    currState = STATE.ERROR;
+                }
+            } else if (currState == STATE.IN_ASSIGN) {
+                if(currChar == '='){
+                    TokenVal.append(currChar);
+                    currState = STATE.START;
+                    return new TokenRecord(TokenVal.toString(), "ASSIGN");
+                } else {
+                    currState = STATE.ERROR;
+                }
             } else {
                 currState = STATE.ERROR;
-                System.out.println("Error: Input code is incorrect");
-                break;
             }
         }
 
@@ -113,7 +119,7 @@ public class Scanner {
         else if(currState == STATE.ERROR) {
             currState = STATE.START;
             return new TokenRecord("-1", "-1");
-        }else if (currState != STATE.ERROR) {
+        } else {
             currState = STATE.START;
         }
 
