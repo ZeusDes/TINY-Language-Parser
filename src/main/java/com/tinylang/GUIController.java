@@ -1,7 +1,9 @@
-package com.example.mytinylanguageparser;
+package com.tinylang;
 
 import java.io.File;
 import java.io.IOException;
+
+import com.tinylang.utils.ScannerDriver;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
