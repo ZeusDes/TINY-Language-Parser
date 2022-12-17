@@ -1,25 +1,33 @@
 package com.tinylang.utils;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
 public class TokenRecord {
-    private String TokenType;
-    private String TokenValue;
+    @Getter private String TokenType;
+    @Getter private String StringValue;
+    @Getter private int NumValue;
 
-    public TokenRecord(String tokenValue, String tokenType) {
+    public TokenRecord(String StringValue, String tokenType) {
         this.TokenType = tokenType;
-        this.TokenValue = tokenValue;
+        this.StringValue = StringValue;
     }
-    public String getTokenValue(){
-        return TokenValue;
+
+    public TokenRecord(int NumValue, String tokenType){
+        this.TokenType = tokenType;
+        this.NumValue = NumValue;
     }
 
     @Override
     public String toString() {
-        return "(\"" +
-                TokenValue +
-                "\", " + TokenType +
-                ')';
+        if(StringValue != null) {
+            return "(\"" +
+                    StringValue +
+                    "\", " + TokenType +
+                    ')';
+        } else {
+            return "(" + NumValue +
+                    ", " + TokenType +
+                    ')';
+        }
     }
 }
