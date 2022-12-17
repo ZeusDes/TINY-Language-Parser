@@ -6,7 +6,7 @@
 
 <?import javafx.scene.control.Button?>
 <VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.mytinylanguageparser.GUIController">
+      fx:controller="com.tinylang.GUIController">
 
     <Button text="Choose File!" onAction="#loadFile"/>
     <Button fx:id="compile" text="Compile!" onAction="#compile" disable="true"/>
