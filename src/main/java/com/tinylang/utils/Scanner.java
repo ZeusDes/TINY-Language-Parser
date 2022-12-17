@@ -1,5 +1,7 @@
 package com.tinylang.utils;
 
+import com.tinylang.utils.Exceptions.ScannerException;
+
 import java.io.*;
 import java.util.Map;
 
@@ -55,7 +57,7 @@ public class Scanner {
         return in.hasNext();
     }
 
-    TokenRecord getToken() throws IOException {
+    TokenRecord getToken() throws IOException, ScannerException {
         if(currState == STATE.EOF) {
             return null;
         }
@@ -98,6 +100,7 @@ public class Scanner {
                 if(Character.isDigit(currChar)){
                     TokenVal.append(currChar);
                 } else {
+                    TokenVal.append(currChar);
                     currState = STATE.ERROR;
                 }
             } else if (currState == STATE.IN_ASSIGN) {
@@ -106,6 +109,7 @@ public class Scanner {
                     currState = STATE.START;
                     return new TokenRecord(TokenVal.toString(), "ASSIGN");
                 } else {
+                    TokenVal.append(currChar);
                     currState = STATE.ERROR;
                 }
             } else {
@@ -117,8 +121,7 @@ public class Scanner {
             currState = STATE.EOF;
         }
         else if(currState == STATE.ERROR) {
-            currState = STATE.START;
-            return new TokenRecord("-1", "-1");
+            throw new ScannerException(TokenVal.toString());
         } else {
             currState = STATE.START;
         }
@@ -130,6 +133,7 @@ public class Scanner {
             TokenType = Reserved_keyword.get(TokenVal.toString());
         else if(TokenVal.length() > 0 && Character.isDigit(TokenVal.charAt(0))){
             TokenType = "NUMBER";
+            return new TokenRecord(Integer.parseInt(TokenVal.toString()), TokenType);
         } else {
             TokenType = "IDENTIFIER";
         }

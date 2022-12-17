@@ -1,31 +1,32 @@
 package com.tinylang.utils;
 
+import com.tinylang.utils.Exceptions.ScannerException;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class ScannerDriver {
-    public static boolean scan(File inputFile, File outputFile) throws IOException {
-        java.util.Scanner sc = new java.util.Scanner(System.in);
+    public static boolean scan(File inputFile, File outputFile) throws IOException, ScannerException {
         Scanner myScanner = new Scanner(inputFile.getAbsolutePath());
         TokenRecord myTkn = myScanner.getToken();
         FileWriter myWriter = new FileWriter(outputFile);
-        while (myScanner.hasNextChar()) {
-            try {
-                if(myTkn != null) {
+        try {
+            while (myScanner.hasNextChar()) {
+                if (myTkn != null) {
                     myWriter.write(myTkn.toString() + '\n');
                 }
+                myWriter.flush();
                 myTkn = myScanner.getToken();
-                if(myTkn.getTokenValue().equals("-1")){
-                    myWriter.write("Error: Code has something wrong" + '\n');
-                    return false;
-                }
-
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
+        } catch (IOException e){
+            throw new RuntimeException(e);
+        } catch (ScannerException e){
+            myWriter.flush();
+            throw e;
+        } finally {
+            myWriter.close();
         }
-        myWriter.close();
         return true;
     }
 }
