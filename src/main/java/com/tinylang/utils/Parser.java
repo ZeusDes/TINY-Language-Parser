@@ -18,7 +18,7 @@ public class Parser {
     }
 
     // FIXME: Handling Parser Exception in GUI
-    boolean match(String target) throws ParserException, ScannerException, IOException {
+    boolean match(String target) throws ParserException, ScannerException {
         String tokenVal = currToken.getTokenType();
         if(!tokenVal.equals(target)) {
             throw new ParserException(tokenVal);
@@ -27,7 +27,7 @@ public class Parser {
         return true;
     }
 
-    MutableNode addop() throws ParserException, ScannerException, IOException {
+    private MutableNode addop() throws ParserException, ScannerException {
         MutableNode node;
         String lbl = "<b>OPERATOR</b></br>";
         if(currToken.getTokenType().equals("PLUS")){
@@ -42,7 +42,7 @@ public class Parser {
         return node;
     }
 
-    MutableNode mulop() throws ParserException, ScannerException, IOException {
+    private MutableNode mulop() throws ParserException, ScannerException, IOException {
         MutableNode node;
         String lbl = "<b>OPERATOR</b></br>";
         if(currToken.getTokenType().equals("MULT")){
@@ -57,7 +57,7 @@ public class Parser {
         return node;
     }
 
-    MutableNode comparison_op() throws ParserException, ScannerException, IOException {
+    private MutableNode comparison_op() throws ParserException, ScannerException {
         MutableNode node;
         String lbl = "<b>OPERATOR</b></br>";
         if(currToken.getTokenType().equals("LESSTHAN")){
@@ -72,27 +72,96 @@ public class Parser {
         return node;
     }
 
-    MutableNode factor(){
+    private MutableNode factor(){
         MutableNode node = null;
         /* Code */
         return node;
     }
 
-    MutableNode term(){
+    private MutableNode term(){
         MutableNode node = null;
         /* Code */
         return node;
     }
 
-    MutableNode statement(){
+    private MutableNode statement(){
         MutableNode node = null;
         /* Code */
         return node;
     }
 
-    MutableNode stmt_seq(){
+    private MutableNode stmt_seq(){
         MutableNode node = null;
         /* Code*/
+        return node;
+    }
+
+    private MutableNode simple_exp() throws ScannerException, ParserException {
+        MutableNode node = term();
+        String curType = currToken.getTokenType();
+        while(curType.equals("PLUS") || curType.equals("MINUS")){
+            MutableNode newNode = addop();
+            newNode.addLink(node); // left
+            newNode.addLink(term()); // right
+            node = newNode;
+        }
+        return node;
+    }
+
+    private MutableNode exp() throws ScannerException, ParserException {
+        MutableNode node = simple_exp();
+        String curType = currToken.getTokenType();
+        if(curType.equals("LESSTHAN") || curType.equals("EQUAL")) {
+            MutableNode newNode = comparison_op();
+            newNode.addLink(node);
+            newNode.addLink(simple_exp());
+            node = newNode;
+        }
+        return node;
+    }
+
+    private MutableNode if_stmt() throws ScannerException, ParserException {
+        match("IF");
+        MutableNode node = mutNode("IF").add(Shape.RECTANGLE);
+        node.addLink(exp());
+        match("THEN");
+        node.addLink(stmt_seq());
+        if(currToken.getTokenType().equals("ELSE")) {
+            match("ELSE");
+            node.addLink(stmt_seq());
+        }
+        match("END");
+        return node;
+    }
+
+
+    private MutableNode repeat() throws ScannerException, ParserException {
+        match("REPEAT");
+        MutableNode node = mutNode("REPEAT").add(Shape.RECTANGLE);
+        node.addLink(stmt_seq());
+        match("UNTIL");
+        node.addLink(exp());
+        return node;
+    }
+
+    private MutableNode assign_stmt() throws ScannerException, ParserException {
+        match("IDENTIFIER");
+
+        MutableNode node = null;
+        /* Code */
+        return node;
+    }
+
+    private MutableNode read_stmt(){
+        MutableNode node = null;
+        /* Code*/
+        return node;
+    }
+
+
+    private MutableNode write_stmt(){
+        MutableNode node = null;
+        /* Code */
         return node;
     }
 

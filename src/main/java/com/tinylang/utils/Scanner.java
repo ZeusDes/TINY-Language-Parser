@@ -53,7 +53,7 @@ public class Scanner {
         return in.hasNext();
     }
 
-    TokenRecord getToken() throws IOException, ScannerException {
+    TokenRecord getToken() throws ScannerException {
         if(currState == STATE.EOF) {
             return null;
         }
