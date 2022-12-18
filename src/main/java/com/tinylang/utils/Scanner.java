@@ -8,7 +8,7 @@ import java.util.Map;
 import static java.util.Map.entry;
 
 public class Scanner {
-    private java.util.Scanner in;
+    private final java.util.Scanner in;
     private STATE currState;
     char currChar = ' ';
     boolean isDelimiter = false;
@@ -44,13 +44,9 @@ public class Scanner {
         EOF
     }
 
-    public Scanner(String file_path){
-        try{
-            in = new java.util.Scanner(new File(file_path));
-            currState = STATE.START;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+    public Scanner(String file_path) throws FileNotFoundException {
+        in = new java.util.Scanner(new File(file_path));
+        currState = STATE.START;
     }
 
     public boolean hasNextChar(){

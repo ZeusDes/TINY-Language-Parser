@@ -36,6 +36,9 @@ javafx {
 dependencies {
     implementation('org.controlsfx:controlsfx:11.1.0')
     implementation 'org.projectlombok:lombok:1.18.24'
+    implementation 'guru.nidi:graphviz-java:0.18.1'
+    implementation "com.eclipsesource.j2v8:j2v8_linux_x86_64:4.6.0"
+
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
