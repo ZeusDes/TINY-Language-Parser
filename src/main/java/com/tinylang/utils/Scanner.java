@@ -129,7 +129,6 @@ public class Scanner {
             TokenType = Reserved_keyword.get(TokenVal.toString());
         else if(TokenVal.length() > 0 && Character.isDigit(TokenVal.charAt(0))){
             TokenType = "NUMBER";
-            return new TokenRecord(Integer.parseInt(TokenVal.toString()), TokenType);
         } else {
             TokenType = "IDENTIFIER";
         }
