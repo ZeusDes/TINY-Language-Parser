@@ -5,6 +5,7 @@ module com.tinylang {
     requires org.controlsfx.controls;
     requires lombok;
     requires guru.nidi.graphviz;
+    requires java.desktop;
 
     opens com.tinylang to javafx.fxml;
     exports com.tinylang;

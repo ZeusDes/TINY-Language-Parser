@@ -14,21 +14,21 @@ public class Parser {
     }
 
     public String parse() throws ScannerException, ParserException {
-        String dot = "digraph G { graph []" + stmt_seq().toDot(1) + "}";
+        String dot = "graph G { graph []" + stmt_seq().toDot() + "}";
         return dot;
     }
 
     private void match(String target) throws ParserException, ScannerException {
         String tokenVal = currToken.getTokenType();
         if(!tokenVal.equals(target)) {
-            throw new ParserException(tokenVal);
+            throw new ParserException(target, tokenVal);
         }
         currToken = scanner.getToken();
     }
 
     private Node addop() throws ParserException, ScannerException {
         Node node;
-        String label = "OPERATOR<BR />(";
+        String label = "OPERATOR\\n(";
         String tk_type = currToken.getTokenType();
         if (tk_type.equals("PLUS")) {
             node = new Node(label + "+)", Node.Shape.CIRCLE);
@@ -44,7 +44,7 @@ public class Parser {
 
     private Node mulop() throws ParserException, ScannerException {
         Node node;
-        String label = "OPERATOR<BR />(";
+        String label = "OPERATOR\\n(";
         String tk_type = currToken.getTokenType();
         if (tk_type.equals("MULT")) {
             node = new Node(label + "*)", Node.Shape.CIRCLE);
@@ -60,7 +60,7 @@ public class Parser {
 
     private Node comparison_op() throws ParserException, ScannerException {
         Node node;
-        String label = "OPERATOR<BR />(";
+        String label = "OPERATOR\\n(";
         String tk_type = currToken.getTokenType();
         if (tk_type.equals("LESSTHAN")) {
             node = new Node(label + "<)", Node.Shape.CIRCLE);
@@ -81,12 +81,13 @@ public class Parser {
             node = exp();
             match("CLOSEDBRACKET");
         } else if(currToken.getTokenType().equals("IDENTIFIER")){
-            node = new Node("IDENTIFIER" + currToken.getStringValue(), Node.Shape.CIRCLE);
+            node = new Node("IDENTIFIER\\n(" + currToken.getStringValue() + ")" , Node.Shape.CIRCLE);
         } else if(currToken.getTokenType().equals("NUMBER")) {
-            node = new Node("NUMBER" + currToken.getStringValue(), Node.Shape.CIRCLE);
+            node = new Node("CONSTANT\\n(" + currToken.getStringValue() + ")", Node.Shape.CIRCLE);
         } else {
             throw new ParserException(currToken.getStringValue());
         }
+        match(currToken.getTokenType());
         return node;
     }
 
@@ -123,15 +124,15 @@ public class Parser {
     }
 
     private Node stmt_seq() throws ScannerException, ParserException {
-        Node node = statement();
-        Node currNode;
+        Node oldNode = statement();
+        Node node = oldNode;
         while(currToken.getTokenType().equals("SEMICOLON")){
             match("SEMICOLON");
-            currNode = statement();
+            Node currNode = statement();
             node.setSibling(currNode);
             node = currNode;
         }
-        return node;
+        return oldNode;
     }
 
     private Node simple_exp() throws ScannerException, ParserException {
@@ -141,6 +142,7 @@ public class Parser {
             Node newNode = addop();
             newNode.addChilds(node, term());
             node = newNode;
+            curType = currToken.getTokenType();
         }
         return node;
     }
@@ -160,6 +162,7 @@ public class Parser {
         match("IF");
         Node node = new Node("IF", Node.Shape.RECTANGLE);
         node.addChild(exp());
+
         match("THEN");
         node.addChild(stmt_seq());
         if(currToken.getTokenType().equals("ELSE")) {
@@ -184,7 +187,7 @@ public class Parser {
         String curValue = currToken.getStringValue();
         match("IDENTIFIER");
         match("ASSIGN");
-        String assignStr = "ASSIGN<BR />(" + curValue + ")";
+        String assignStr = "ASSIGN\\n(" + curValue + ")";
         Node node = new Node(assignStr, Node.Shape.RECTANGLE);
         node.addChild(exp());
         return node;
@@ -194,7 +197,7 @@ public class Parser {
         match("READ");
         String curValue = currToken.getStringValue();
         match("IDENTIFIER");
-        String readStr = "READ<BR />(" + curValue + ")";
+        String readStr = "READ\\n(" + curValue + ")";
         return new Node(readStr, Node.Shape.RECTANGLE);
     }
 
