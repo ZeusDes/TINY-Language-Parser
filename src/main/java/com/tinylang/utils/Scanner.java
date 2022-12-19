@@ -91,7 +91,12 @@ public class Scanner {
                 isDelimiter = true;
                 currState = STATE.DONE;
             } else if (currState == STATE.IN_ALPHA) {
-                TokenVal.append(currChar);
+                if(Character.isAlphabetic(currChar) || Character.isDigit(currChar))
+                    TokenVal.append(currChar);
+                else {
+                    currState = STATE.DONE;
+                    isDelimiter = true;
+                }
             } else if (currState == STATE.IN_NUM) {
                 if(Character.isDigit(currChar)){
                     TokenVal.append(currChar);
