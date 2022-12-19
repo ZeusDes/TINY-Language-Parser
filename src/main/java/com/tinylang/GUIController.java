@@ -65,7 +65,7 @@ public class GUIController {
     @FXML
     protected void parseController(){
         try {
-            Parser parser = new Parser(inputFile.getAbsolutePath());
+            Parser parser = new Parser(inputFile);
             String dot = parser.parse();
             System.out.println(dot);
 //            showParseTree(dot);
