@@ -99,7 +99,7 @@ public class Parser {
     private MutableNode simple_exp() throws ScannerException, ParserException {
         MutableNode node = term();
         String curType = currToken.getTokenType();
-        while(curType.equals("PLUS") || curType.equals("MINUS")){
+        while(curType.equals("PLUS") || curType.equals("MINUS")) {
             MutableNode newNode = addop();
             newNode.addLink(node); // left
             newNode.addLink(term()); // right
@@ -113,8 +113,8 @@ public class Parser {
         String curType = currToken.getTokenType();
         if(curType.equals("LESSTHAN") || curType.equals("EQUAL")) {
             MutableNode newNode = comparison_op();
-            newNode.addLink(node);
-            newNode.addLink(simple_exp());
+            newNode.addLink(node); // left
+            newNode.addLink(simple_exp()); // right
             node = newNode;
         }
         return node;
@@ -138,30 +138,36 @@ public class Parser {
     private MutableNode repeat() throws ScannerException, ParserException {
         match("REPEAT");
         MutableNode node = mutNode("REPEAT").add(Shape.RECTANGLE);
-        node.addLink(stmt_seq());
+        node.addLink(stmt_seq()); // left
         match("UNTIL");
-        node.addLink(exp());
+        node.addLink(exp()); // right
         return node;
     }
 
     private MutableNode assign_stmt() throws ScannerException, ParserException {
+        String curValue = currToken.getStringValue();
         match("IDENTIFIER");
-
-        MutableNode node = null;
-        /* Code */
+        match("ASSIGN");
+        String assignStr = "<p>ASSIGN</p>(" + curValue + ")";
+        MutableNode node = mutNode(Label.html(assignStr)).add(Shape.RECTANGLE);
+        node.addLink(exp());
         return node;
     }
 
-    private MutableNode read_stmt(){
-        MutableNode node = null;
-        /* Code*/
+    private MutableNode read_stmt() throws ScannerException, ParserException {
+        match("READ");
+        String curValue = currToken.getStringValue();
+        match("IDENTIFIER");
+        String readStr = "<p>READ</p>(" + curValue + ")";
+        MutableNode node = mutNode(Label.html(readStr)).add(Shape.RECTANGLE);
         return node;
     }
 
 
-    private MutableNode write_stmt(){
-        MutableNode node = null;
-        /* Code */
+    private MutableNode write_stmt() throws ScannerException, ParserException {
+        match("WRITE");
+        MutableNode node = mutNode("WRITE").add(Shape.RECTANGLE);
+        node.addLink(exp());
         return node;
     }
 
