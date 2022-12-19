@@ -10,5 +10,6 @@
 
     <Button text="Choose File!" onAction="#loadFile"/>
     <Button fx:id="compile" text="Compile!" onAction="#compile" disable="true"/>
+    <Button fx:id="Parse" text="Parse!" onAction="#parseController" disable="true"/>
     <Label fx:id="status" text="Waiting to open file"/>
 </VBox>
