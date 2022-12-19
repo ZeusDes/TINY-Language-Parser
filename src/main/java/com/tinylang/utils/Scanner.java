@@ -44,8 +44,8 @@ public class Scanner {
         EOF
     }
 
-    public Scanner(String file_path) throws FileNotFoundException {
-        in = new java.util.Scanner(new File(file_path));
+    public Scanner(File input) throws FileNotFoundException {
+        in = new java.util.Scanner(input);
         currState = STATE.START;
     }
 

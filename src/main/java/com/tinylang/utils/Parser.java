@@ -3,13 +3,14 @@ import com.tinylang.utils.Exceptions.ParserException;
 import com.tinylang.utils.Exceptions.ScannerException;
 import com.tinylang.utils.dataStructures.Tree.Node;
 
+import java.io.File;
 import java.io.IOException;
 
 public class Parser {
     Scanner scanner;
     TokenRecord currToken;
-    public Parser(String file_path) throws ScannerException, IOException {
-        scanner = new Scanner(file_path);
+    public Parser(File input) throws ScannerException, IOException {
+        scanner = new Scanner(input);
         currToken = scanner.getToken();
     }
 
