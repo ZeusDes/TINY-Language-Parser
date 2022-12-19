@@ -13,7 +13,11 @@ public class Parser {
         currToken = scanner.getToken();
     }
 
-    // FIXME: Handling Parser Exception in GUI
+    public String parse() throws ScannerException, ParserException {
+        String dot = "digraph G { graph []" + stmt_seq().toDot(1) + "}";
+        return dot;
+    }
+
     private void match(String target) throws ParserException, ScannerException {
         String tokenVal = currToken.getTokenType();
         if(!tokenVal.equals(target)) {
@@ -135,8 +139,7 @@ public class Parser {
         String curType = currToken.getTokenType();
         while(curType.equals("PLUS") || curType.equals("MINUS")) {
             Node newNode = addop();
-            newNode.addChild(node); // left
-            newNode.addChild(term()); // right
+            newNode.addChilds(node, term());
             node = newNode;
         }
         return node;
@@ -147,8 +150,7 @@ public class Parser {
         String curType = currToken.getTokenType();
         if(curType.equals("LESSTHAN") || curType.equals("EQUAL")) {
             Node newNode = comparison_op();
-            newNode.addChild(node); // left
-            newNode.addChild(simple_exp()); // right
+            newNode.addChilds(node, simple_exp());
             node = newNode;
         }
         return node;
@@ -193,8 +195,7 @@ public class Parser {
         String curValue = currToken.getStringValue();
         match("IDENTIFIER");
         String readStr = "READ<BR />(" + curValue + ")";
-        Node node = new Node(readStr, Node.Shape.RECTANGLE);
-        return node;
+        return new Node(readStr, Node.Shape.RECTANGLE);
     }
 
 

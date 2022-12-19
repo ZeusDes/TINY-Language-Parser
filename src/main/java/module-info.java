@@ -9,5 +9,7 @@ module com.tinylang {
     opens com.tinylang to javafx.fxml;
     exports com.tinylang;
     exports com.tinylang.utils;
+    exports com.tinylang.utils.dataStructures.Tree;
+    exports com.tinylang.utils.Exceptions;
     opens com.tinylang.utils to javafx.fxml;
 }
