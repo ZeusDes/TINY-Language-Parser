@@ -12,16 +12,16 @@ import com.tinylang.utils.Exceptions.ScannerException;
 import com.tinylang.utils.Parser;
 import com.tinylang.utils.ScannerDriver;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javax.imageio.ImageIO;
 import lombok.Data;
-import lombok.var;
 
 @Data
 public class GUIController {
@@ -64,11 +64,19 @@ public class GUIController {
 
     @FXML
     protected void parseController(){
+        status.setText("Parsing...");
         try {
             Parser parser = new Parser(inputFile);
             String dot = parser.parse();
             System.out.println(dot);
-//            showParseTree(dot);
+            ImageView img = showParseTree(dot);
+            /* Setting new window with Graph */
+            Stage stage = new Stage();
+            stage.setTitle("Syntax Tree");
+            HBox hbox = new HBox(img);
+            stage.setScene(new Scene(hbox));
+            stage.show();
+            status.setText("Parsed!");
         } catch (IOException e){
             status.setText("Error: Cannot Open file");
         } catch (ScannerException | ParserException e) {
@@ -76,10 +84,9 @@ public class GUIController {
         }
     }
 
-    private void showParseTree(String dot) throws IOException {
+    private ImageView showParseTree(String dot) throws IOException {
         MutableGraph g = new guru.nidi.graphviz.parse.Parser().read(dot);
-        g.setDirected(false);
-         BufferedImage image = Graphviz.fromGraph(g).width(10000).render(Format.PNG).toImage();
+        BufferedImage image = Graphviz.fromGraph(g).width(1080).render(Format.PNG).toImage();
 
         WritableImage wr = null;
         wr = new WritableImage(image.getWidth(), image.getHeight());
@@ -90,5 +97,6 @@ public class GUIController {
             }
         }
         ImageView imageView = new ImageView(wr);
+        return imageView;
     }
 }
