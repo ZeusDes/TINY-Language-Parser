@@ -13,6 +13,8 @@ import lombok.Setter;
 public class Node {
     private String name;
     private Shape shape;
+    private int id;
+    private static int count = 1;
 
     @Setter(AccessLevel.NONE)
     private List<Node> children;
@@ -23,6 +25,11 @@ public class Node {
         this.shape = shape;
         this.children = new ArrayList<>();
         this.sibling = null;
+        id = count++;
+    }
+
+    public void setSibling(Node node) {
+        this.sibling = node;
     }
 
     public void addChild(Node node) {
@@ -38,21 +45,24 @@ public class Node {
         CIRCLE
     };
 
-    public String toDot(int id) {
-        String id_str = this.name + id;
-        String dot = " " + id_str + "[label=\"" + this.name + "\"] ";
+    public String toDot() {
+        String dotShape = "";
+        if(this.shape == Shape.RECTANGLE){
+            dotShape = ", shape=rect";
+        }
+        String dot = " " + id + "[label=\"" + this.name + "\" " + dotShape + "] ";
+        System.out.println(this.sibling);
         if(this.sibling != null){
-            dot += " " + "{ rank = same  " + this.name + " " + this.sibling.getName() + "  } ";
-            dot += " " + this.name + " -> " + this.sibling.getName() + " ";
-            dot += this.sibling.toDot(++id);
+            dot += this.sibling.toDot();
+            dot += " " + "{ rank = same  " + this.id + " " + this.sibling.getId() + "  } ";
+            dot += " " + this.id + " -- " + this.sibling.getId() + " ";
         }
 
         for (Node child :
                 this.children) {
-            dot += " " + this.name + " -> " + child.getName() + " ";
-            dot += child.toDot(++id);
+            dot += " " + this.id + " -- " + child.getId() + " ";
+            dot += child.toDot();
         }
-
         return dot;
     }
 }
