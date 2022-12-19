@@ -53,7 +53,7 @@ public class GUIController {
     @FXML
     protected void parseController(){
         try {
-            Parser parser = new Parser(inputFile.getAbsolutePath());
+            Parser parser = new Parser(inputFile);
             dot = parser.parse();
         } catch (IOException e){
             status.setText("Error: Cannot Open file");

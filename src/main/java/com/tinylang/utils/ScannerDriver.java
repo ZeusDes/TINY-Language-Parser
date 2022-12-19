@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class ScannerDriver {
     public static boolean scan(File inputFile, File outputFile) throws IOException, ScannerException {
-        Scanner myScanner = new Scanner(inputFile.getAbsolutePath());
+        Scanner myScanner = new Scanner(inputFile);
         TokenRecord myTkn = myScanner.getToken();
         FileWriter myWriter = new FileWriter(outputFile);
         try {
