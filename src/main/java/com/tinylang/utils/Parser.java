@@ -2,13 +2,8 @@ package com.tinylang.utils;
 import com.tinylang.utils.Exceptions.ParserException;
 import com.tinylang.utils.Exceptions.ScannerException;
 import com.tinylang.utils.dataStructures.Tree.Node;
-import guru.nidi.graphviz.attribute.Label;
-import guru.nidi.graphviz.attribute.Shape;
-import guru.nidi.graphviz.model.MutableNode;
 
 import java.io.IOException;
-
-import static guru.nidi.graphviz.model.Factory.mutNode;
 
 public class Parser {
     Scanner scanner;
@@ -19,23 +14,23 @@ public class Parser {
     }
 
     // FIXME: Handling Parser Exception in GUI
-    boolean match(String target) throws ParserException, ScannerException {
+    private void match(String target) throws ParserException, ScannerException {
         String tokenVal = currToken.getTokenType();
         if(!tokenVal.equals(target)) {
             throw new ParserException(tokenVal);
         }
         currToken = scanner.getToken();
-        return true;
     }
 
     private Node addop() throws ParserException, ScannerException {
-        MutableNode node;
-        String lbl = "<b>OPERATOR</b></br>";
-        if(currToken.getTokenType().equals("PLUS")){
-            node = mutNode("+").add(Label.html(lbl + "(+)"));
+        Node node;
+        String label = "OPERATOR<BR />(";
+        String tk_type = currToken.getTokenType();
+        if (tk_type.equals("PLUS")) {
+            node = new Node(label + "+)", Node.Shape.CIRCLE);
             match("PLUS");
-        } else if(currToken.getTokenType().equals("MINUS")){
-            node = mutNode("-").add(Label.html(lbl + "(-)"));
+        } else if(tk_type.equals("MINUS")) {
+            node = new Node(label + "-)", Node.Shape.CIRCLE);
             match("MINUS");
         } else {
             throw new ParserException(currToken.getStringValue());
@@ -43,14 +38,15 @@ public class Parser {
         return node;
     }
 
-    private Node mulop() throws ParserException, ScannerException, IOException {
-        MutableNode node;
-        String lbl = "<b>OPERATOR</b></br>";
-        if(currToken.getTokenType().equals("MULT")){
-            node = mutNode("*").add(Label.html(lbl + "(*)"));
+    private Node mulop() throws ParserException, ScannerException {
+        Node node;
+        String label = "OPERATOR<BR />(";
+        String tk_type = currToken.getTokenType();
+        if (tk_type.equals("MULT")) {
+            node = new Node(label + "*)", Node.Shape.CIRCLE);
             match("MULT");
-        } else if(currToken.getTokenType().equals("/")){
-            node = mutNode("DIV").add(Label.html(lbl + "(/)"));
+        } else if(tk_type.equals("DIV")) {
+            node = new Node(label + "/)", Node.Shape.CIRCLE);
             match("DIV");
         } else {
             throw new ParserException(currToken.getStringValue());
@@ -59,13 +55,14 @@ public class Parser {
     }
 
     private Node comparison_op() throws ParserException, ScannerException {
-        MutableNode node;
-        String lbl = "<b>OPERATOR</b></br>";
-        if(currToken.getTokenType().equals("LESSTHAN")){
-            node = mutNode("<").add(Label.html(lbl + "(<)"));
+        Node node;
+        String label = "OPERATOR<BR />(";
+        String tk_type = currToken.getTokenType();
+        if (tk_type.equals("LESSTHAN")) {
+            node = new Node(label + "<)", Node.Shape.CIRCLE);
             match("LESSTHAN");
-        } else if(currToken.getTokenType().equals("EQUAL")){
-            node = mutNode("=").add(Label.html(lbl + "(=)"));
+        } else if(tk_type.equals("EQUAL")) {
+            node = new Node(label + "=)", Node.Shape.CIRCLE);
             match("EQUAL");
         } else {
             throw new ParserException(currToken.getStringValue());
@@ -73,27 +70,63 @@ public class Parser {
         return node;
     }
 
-    private Node factor(){
-        MutableNode node = null;
-        /* Code */
+    private Node factor() throws ScannerException, ParserException {
+        Node node;
+        if(currToken.getTokenType().equals("OPENBRACKET")){
+            match("OPENBRACKET");
+            node = exp();
+            match("CLOSEDBRACKET");
+        } else if(currToken.getTokenType().equals("IDENTIFIER")){
+            node = new Node("IDENTIFIER" + currToken.getStringValue(), Node.Shape.CIRCLE);
+        } else if(currToken.getTokenType().equals("NUMBER")) {
+            node = new Node("NUMBER" + currToken.getStringValue(), Node.Shape.CIRCLE);
+        } else {
+            throw new ParserException(currToken.getStringValue());
+        }
         return node;
     }
 
-    private Node term(){
-        MutableNode node = null;
-        /* Code */
+    private Node term() throws ScannerException, ParserException {
+        Node node = factor();
+        Node currNode;
+        String tk_type = currToken.getTokenType();
+        while(tk_type.equals("MULT") || tk_type.equals("DIV")){
+            currNode = mulop();
+            currNode.addChild(node);
+            node = currNode;
+            node.addChild(factor());
+            tk_type = currToken.getTokenType();
+        }
         return node;
     }
 
-    private Node statement(){
-        MutableNode node = null;
-        /* Code */
+    private Node statement() throws ScannerException, ParserException {
+        Node node;
+        if(currToken.getTokenType().equals("IF")) {
+            node = if_stmt();
+        } else if (currToken.getTokenType().equals("REPEAT")) {
+            node = repeat();
+        } else if (currToken.getTokenType().equals("IDENTIFIER")) {
+            node = assign_stmt();
+        } else if (currToken.getTokenType().equals("READ")) {
+            node = read_stmt();
+        } else if (currToken.getTokenType().equals("WRITE")) {
+            node = write_stmt();
+        } else {
+            throw new ParserException(currToken.getStringValue());
+        }
         return node;
     }
 
-    private Node stmt_seq(){
-        MutableNode node = null;
-        /* Code*/
+    private Node stmt_seq() throws ScannerException, ParserException {
+        Node node = statement();
+        Node currNode;
+        while(currToken.getTokenType().equals("SEMICOLON")){
+            match("SEMICOLON");
+            currNode = statement();
+            node.setSibling(currNode);
+            node = currNode;
+        }
         return node;
     }
 
