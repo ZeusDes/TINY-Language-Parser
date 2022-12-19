@@ -1,6 +1,7 @@
 package com.tinylang.utils;
 import com.tinylang.utils.Exceptions.ParserException;
 import com.tinylang.utils.Exceptions.ScannerException;
+import com.tinylang.utils.dataStructures.Tree.Node;
 import guru.nidi.graphviz.attribute.Label;
 import guru.nidi.graphviz.attribute.Shape;
 import guru.nidi.graphviz.model.MutableNode;
@@ -27,7 +28,7 @@ public class Parser {
         return true;
     }
 
-    private MutableNode addop() throws ParserException, ScannerException {
+    private Node addop() throws ParserException, ScannerException {
         MutableNode node;
         String lbl = "<b>OPERATOR</b></br>";
         if(currToken.getTokenType().equals("PLUS")){
@@ -42,7 +43,7 @@ public class Parser {
         return node;
     }
 
-    private MutableNode mulop() throws ParserException, ScannerException, IOException {
+    private Node mulop() throws ParserException, ScannerException, IOException {
         MutableNode node;
         String lbl = "<b>OPERATOR</b></br>";
         if(currToken.getTokenType().equals("MULT")){
@@ -57,7 +58,7 @@ public class Parser {
         return node;
     }
 
-    private MutableNode comparison_op() throws ParserException, ScannerException {
+    private Node comparison_op() throws ParserException, ScannerException {
         MutableNode node;
         String lbl = "<b>OPERATOR</b></br>";
         if(currToken.getTokenType().equals("LESSTHAN")){
@@ -72,102 +73,102 @@ public class Parser {
         return node;
     }
 
-    private MutableNode factor(){
+    private Node factor(){
         MutableNode node = null;
         /* Code */
         return node;
     }
 
-    private MutableNode term(){
+    private Node term(){
         MutableNode node = null;
         /* Code */
         return node;
     }
 
-    private MutableNode statement(){
+    private Node statement(){
         MutableNode node = null;
         /* Code */
         return node;
     }
 
-    private MutableNode stmt_seq(){
+    private Node stmt_seq(){
         MutableNode node = null;
         /* Code*/
         return node;
     }
 
-    private MutableNode simple_exp() throws ScannerException, ParserException {
-        MutableNode node = term();
+    private Node simple_exp() throws ScannerException, ParserException {
+        Node node = term();
         String curType = currToken.getTokenType();
         while(curType.equals("PLUS") || curType.equals("MINUS")) {
-            MutableNode newNode = addop();
-            newNode.addLink(node); // left
-            newNode.addLink(term()); // right
+            Node newNode = addop();
+            newNode.addChild(node); // left
+            newNode.addChild(term()); // right
             node = newNode;
         }
         return node;
     }
 
-    private MutableNode exp() throws ScannerException, ParserException {
-        MutableNode node = simple_exp();
+    private Node exp() throws ScannerException, ParserException {
+        Node node = simple_exp();
         String curType = currToken.getTokenType();
         if(curType.equals("LESSTHAN") || curType.equals("EQUAL")) {
-            MutableNode newNode = comparison_op();
-            newNode.addLink(node); // left
-            newNode.addLink(simple_exp()); // right
+            Node newNode = comparison_op();
+            newNode.addChild(node); // left
+            newNode.addChild(simple_exp()); // right
             node = newNode;
         }
         return node;
     }
 
-    private MutableNode if_stmt() throws ScannerException, ParserException {
+    private Node if_stmt() throws ScannerException, ParserException {
         match("IF");
-        MutableNode node = mutNode("IF").add(Shape.RECTANGLE);
-        node.addLink(exp());
+        Node node = new Node("IF", Node.Shape.RECTANGLE);
+        node.addChild(exp());
         match("THEN");
-        node.addLink(stmt_seq());
+        node.addChild(stmt_seq());
         if(currToken.getTokenType().equals("ELSE")) {
             match("ELSE");
-            node.addLink(stmt_seq());
+            node.addChild(stmt_seq());
         }
         match("END");
         return node;
     }
 
 
-    private MutableNode repeat() throws ScannerException, ParserException {
+    private Node repeat() throws ScannerException, ParserException {
         match("REPEAT");
-        MutableNode node = mutNode("REPEAT").add(Shape.RECTANGLE);
-        node.addLink(stmt_seq()); // left
+        Node node = new Node("REPEAT", Node.Shape.RECTANGLE);
+        node.addChild(stmt_seq()); // left
         match("UNTIL");
-        node.addLink(exp()); // right
+        node.addChild(exp()); // right
         return node;
     }
 
-    private MutableNode assign_stmt() throws ScannerException, ParserException {
+    private Node assign_stmt() throws ScannerException, ParserException {
         String curValue = currToken.getStringValue();
         match("IDENTIFIER");
         match("ASSIGN");
-        String assignStr = "<p>ASSIGN</p>(" + curValue + ")";
-        MutableNode node = mutNode(Label.html(assignStr)).add(Shape.RECTANGLE);
-        node.addLink(exp());
+        String assignStr = "ASSIGN<BR />(" + curValue + ")";
+        Node node = new Node(assignStr, Node.Shape.RECTANGLE);
+        node.addChild(exp());
         return node;
     }
 
-    private MutableNode read_stmt() throws ScannerException, ParserException {
+    private Node read_stmt() throws ScannerException, ParserException {
         match("READ");
         String curValue = currToken.getStringValue();
         match("IDENTIFIER");
-        String readStr = "<p>READ</p>(" + curValue + ")";
-        MutableNode node = mutNode(Label.html(readStr)).add(Shape.RECTANGLE);
+        String readStr = "READ<BR />(" + curValue + ")";
+        Node node = new Node(readStr, Node.Shape.RECTANGLE);
         return node;
     }
 
 
-    private MutableNode write_stmt() throws ScannerException, ParserException {
+    private Node write_stmt() throws ScannerException, ParserException {
         match("WRITE");
-        MutableNode node = mutNode("WRITE").add(Shape.RECTANGLE);
-        node.addLink(exp());
+        Node node = new Node("WRITE", Node.Shape.RECTANGLE);
+        node.addChild(exp());
         return node;
     }
 

@@ -10,15 +10,16 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Node {
-    TokenRecord tokenRecord;
-    Boolean isTerminal;
+    private String name;
+    private Shape shape;
 
     @Setter(AccessLevel.NONE)
-    List<Node> children;
+    private List<Node> children;
+    private Node sibling;
 
-    public Node(TokenRecord tokenRecord, Boolean isTerminal) {
-        this.tokenRecord = tokenRecord;
-        this.isTerminal = isTerminal;
+    public Node(String name, Shape shape) {
+        this.name = name;
+        this.shape = shape;
     }
 
     public void addChild(Node node) {
@@ -28,4 +29,9 @@ public class Node {
     public void addChilds(Node... nodes) {
         Collections.addAll(children, nodes);
     }
+
+    public enum Shape{
+        RECTANGLE,
+        CIRCLE
+    };
 }
