@@ -81,6 +81,7 @@ public class GUIController {
             /* Setting new window with Graph */
             Stage stage = new Stage();
             stage.setTitle("Syntax Tree");
+            stage.setResizable(false);
             HBox hbox = new HBox(img);
             stage.setScene(new Scene(hbox));
             stage.show();

@@ -12,7 +12,7 @@ public class GUIApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(GUIApp.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        Scene scene = new Scene(fxmlLoader.load(), 600, 600);
         stage.setTitle("Parser");
         //Image image = new Image("icon.png");
         //stage.getIcons().add(image);
