@@ -50,7 +50,6 @@ public class Node {
             dotShape = ", shape=rect";
         }
         String dot = " " + id + "[label=\"" + this.name + "\" " + dotShape + "] ";
-        System.out.println(this.sibling);
         if(this.sibling != null){
             dot += this.sibling.toDot();
             dot += " " + "{ rank = same  " + this.id + " " + this.sibling.getId() + "  } ";
