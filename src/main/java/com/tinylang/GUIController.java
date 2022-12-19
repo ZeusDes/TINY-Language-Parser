@@ -35,7 +35,7 @@ public class GUIController {
             if(flag)
                 status.setText("Compiled!");
         } catch (IOException e) {
-            e.printStackTrace();
+            status.setText("Error: Cannot Open file");
         } catch (ScannerException e) {
             status.setText(e.getMessage());
         }
@@ -51,8 +51,16 @@ public class GUIController {
     }
 
     @FXML
-    protected void parseController() throws ScannerException, IOException, ParserException {
-        Parser parser = new Parser(inputFile.getAbsolutePath());
-        dot = parser.parse();
+    protected void parseController(){
+        try {
+            Parser parser = new Parser(inputFile.getAbsolutePath());
+            dot = parser.parse();
+        } catch (IOException e){
+            status.setText("Error: Cannot Open file");
+        } catch (ScannerException e) {
+            status.setText(e.getMessage());
+        } catch (ParserException e) {
+            status.setText(e.getMessage());
+        }
     }
 }
