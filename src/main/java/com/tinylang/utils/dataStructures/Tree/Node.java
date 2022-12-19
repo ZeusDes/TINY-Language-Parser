@@ -1,6 +1,5 @@
 package com.tinylang.utils.dataStructures.Tree;
 
-import com.tinylang.utils.TokenRecord;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,7 +42,7 @@ public class Node {
     public enum Shape{
         RECTANGLE,
         CIRCLE
-    };
+    }
 
     public String toDot() {
         String dotShape = "";

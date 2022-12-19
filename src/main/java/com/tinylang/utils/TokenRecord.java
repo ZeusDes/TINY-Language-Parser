@@ -3,8 +3,8 @@ package com.tinylang.utils;
 import lombok.Getter;
 
 public class TokenRecord {
-    @Getter private String TokenType;
-    @Getter private String StringValue;
+    @Getter private final String TokenType;
+    @Getter private final String StringValue;
 
     public TokenRecord(String StringValue, String tokenType) {
         this.TokenType = tokenType;
