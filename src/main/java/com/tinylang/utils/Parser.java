@@ -127,7 +127,7 @@ public class Parser {
     private Node stmt_seq() throws ScannerException, ParserException {
         Node oldNode = statement();
         Node node = oldNode;
-        while(currToken.getTokenType().equals("SEMICOLON")){
+        while(currToken != null && currToken.getTokenType().equals("SEMICOLON")){
             match("SEMICOLON");
             Node currNode = statement();
             node.setSibling(currNode);
