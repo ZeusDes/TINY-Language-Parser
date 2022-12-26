@@ -53,12 +53,12 @@ public class Node {
         if(this.sibling != null){
             dot += this.sibling.toDot();
             dot += " " + "{ rank = same  " + this.id + " " + this.sibling.getId() + "  } ";
-            dot += " " + this.id + " -- " + this.sibling.getId() + " ";
+            dot += " " + this.id + " -- " + this.sibling.getId() + "[minlen=2] ";
         }
 
         for (Node child :
                 this.children) {
-            dot += " " + this.id + " -- " + child.getId() + " ";
+            dot += " " + this.id + " -- " + child.getId() + "[minlen=2] ";
             dot += child.toDot();
         }
         return dot;

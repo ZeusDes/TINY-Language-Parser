@@ -31,7 +31,8 @@ public class Scanner {
             entry("repeat", "REPEAT"),
             entry("until", "UNTIL"),
             entry("read", "READ"),
-            entry("write", "WRITE")
+            entry("write", "WRITE"),
+            entry("else", "ELSE")
     );
     private enum STATE {
         START,

@@ -16,6 +16,7 @@ public class Parser {
 
     public String parse() throws ScannerException, ParserException {
         String dot = "graph G { graph []\n ordering=\"out\"" + stmt_seq().toDot() + "}";
+        System.out.println(dot);
         return dot;
     }
 
@@ -83,12 +84,13 @@ public class Parser {
             match("CLOSEDBRACKET");
         } else if(currToken.getTokenType().equals("IDENTIFIER")){
             node = new Node("IDENTIFIER\\n(" + currToken.getStringValue() + ")" , Node.Shape.CIRCLE);
+            match(currToken.getTokenType());
         } else if(currToken.getTokenType().equals("NUMBER")) {
             node = new Node("CONSTANT\\n(" + currToken.getStringValue() + ")", Node.Shape.CIRCLE);
+            match(currToken.getTokenType());
         } else {
             throw new ParserException(currToken.getStringValue());
         }
-        match(currToken.getTokenType());
         return node;
     }
 
