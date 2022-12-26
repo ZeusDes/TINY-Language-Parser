@@ -63,4 +63,15 @@ public class Node {
         }
         return dot;
     }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "name='" + name + '\'' +
+                ", shape=" + shape +
+                ", id=" + id +
+                ", children=" + children +
+                ", sibling=" + sibling +
+                '}';
+    }
 }

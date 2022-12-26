@@ -15,16 +15,18 @@ public class Parser {
     }
 
     public String parse() throws ScannerException, ParserException {
-        String dot = "graph G { graph []" + stmt_seq().toDot() + "}";
+        String dot = "graph G { graph []\n ordering=\"out\"" + stmt_seq().toDot() + "}";
         return dot;
     }
 
     private void match(String target) throws ParserException, ScannerException {
         String tokenVal = currToken.getTokenType();
         if(!tokenVal.equals(target)) {
-            throw new ParserException(target, tokenVal);
+            throw new ParserException(tokenVal, target);
         }
         currToken = scanner.getToken();
+        if(currToken == null)
+            throw new ParserException("EOF");
     }
 
     private Node addop() throws ParserException, ScannerException {
