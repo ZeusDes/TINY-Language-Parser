@@ -2,10 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.10'
-    id "org.panteleyev.jpackageplugin" version "1.3.1"
 }
-
-apply plugin: "org.panteleyev.jpackageplugin"
 
 group 'com.tinylang'
 version '1.0-SNAPSHOT'
@@ -53,20 +50,13 @@ test {
 
 mainClassName = 'com.tinylang.Main'
 
-jpackage {
-    group = "build"
-    dependsOn("build")
-    appName = "TINYLanguageParser"
-    input = "./build/libs"
-    mainJar = "My-TINY-Language-Parser-1.0-SNAPSHOT.jar"
-    destination = "./build/publish"
+task fatJar(type: Jar) {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 
-    windows {
-        winDirChooser = true
-        winShortcut = true
+    manifest {
+        attributes 'Main-Class': "${mainClassName}"
     }
-
-    linux {
-        linuxShortcut = true
-    }
+    archiveBaseName = "${rootProject.name}"
+    from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
