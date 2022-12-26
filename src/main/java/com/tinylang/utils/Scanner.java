@@ -84,6 +84,8 @@ public class Scanner {
             } else if(currState == STATE.IN_COMMENT) {
                 if(currChar == '}'){
                     currState = STATE.START;
+                } else if (!in.hasNext()){
+                    throw new ScannerException("EOF");
                 }
             } else if (currChar == ' ' || currChar == '\n' || currChar == '\r'){
                 currState = STATE.DONE;
@@ -128,8 +130,6 @@ public class Scanner {
         }
 
         String TokenType;
-        if(TokenVal.length() == 0)
-            return null;
         if(TokenVal.length() > 0 && Reserved_keyword.containsKey(TokenVal.toString()))
             TokenType = Reserved_keyword.get(TokenVal.toString());
         else if(TokenVal.length() > 0 && Character.isDigit(TokenVal.charAt(0))){

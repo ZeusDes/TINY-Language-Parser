@@ -5,7 +5,7 @@ if 0 < x then { don’t compute if x <= 0 }
     fact := fact * x; 
     x := x - 1
   until x = 0; 
-  write fact { output factorial of x
+  write fact { output factorial of x }
 end
 
 read x;

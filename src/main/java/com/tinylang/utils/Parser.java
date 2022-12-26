@@ -25,8 +25,6 @@ public class Parser {
             throw new ParserException(tokenVal, target);
         }
         currToken = scanner.getToken();
-        if(currToken == null)
-            throw new ParserException("EOF");
     }
 
     private Node addop() throws ParserException, ScannerException {
