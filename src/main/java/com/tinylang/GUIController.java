@@ -10,6 +10,8 @@ import guru.nidi.graphviz.model.MutableGraph;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -62,12 +64,33 @@ public class GUIController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open TINY File Code");
         File openFile = fileChooser.showOpenDialog(new Stage());
-        if(openFile == null) return;
+        if(openFile == null)
+            return;
+        if(isEmptyFile(openFile.getPath())) {
+            status.setText("Empty File!!");
+            status.setTextFill(Color.RED);
+            compile.setDisable(true);
+            parse.setDisable(true);
+            return;
+        }
         inputFile = openFile;
         compile.setDisable(false);
         parse.setDisable(false);
         status.setText("File Opened: " + inputFile.getName());
         status.setTextFill(Color.BLUE);
+    }
+
+    static boolean isEmptyFile(String source) {
+        try {
+            for (String line : Files.readAllLines(Paths.get(source))) {
+                if (line != null && !line.trim().isEmpty()) {
+                    return false;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
     @FXML
